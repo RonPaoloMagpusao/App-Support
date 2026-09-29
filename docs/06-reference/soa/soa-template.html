@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<!--
+  ============================================================================
+  MoneyMe STATEMENT OF ACCOUNT (SOA) TEMPLATE
+  Rebuilt to match the Horizon "Loan Document Preview" SOA layout exactly.
+  Spec: soa-format-spec.md (same folder).
+  ----------------------------------------------------------------------------
+  ONLY THE DATA CHANGES. Do not touch the <style> block.
+
+  Wordmark: this repo copy does not embed the MONEYME wordmark. Put the PNG
+  next to this file as moneyme-wordmark.png, or paste the base64 data URI
+  from the original template in Ron's Claude project (soa-template.html).
+
+  Customer data below is placeholder only. Never commit a real customer's
+  name, address or statement to this repository.
+
+  Edit points (search for these):
+    1. "Reference number <REF>"  -> appears 3x (top-right strip, greeting
+                                     line, and the meta row)
+    2. Hi <FirstName>,
+    3. Statement date             -> right cell of table.meta
+    4. table.summary  left cell   -> customer name + address lines
+    5. table.summary  right cell  -> Opening / Closing balance,
+                                     Statement Period, Contract Type
+    6. table.txn                  -> one <tr> per transaction:
+                                     date | trans type | debit | credit | balance
+                                     (header row is the first <tr class="head">)
+                                     Failed = prefix the amount "X ", Pending = "P ",
+                                     and colour the amount cell #FF0000
+    7. .totals                    -> Total interest / Outstanding charges /
+                                     Current arrears
+
+  PRINT SETTINGS (to reproduce the original PDF exactly):
+    Paper: Letter | Margins: Default | Scale: 100%
+    Headers and footers: OFF | Background graphics: ON
+  ============================================================================
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Horizon - Loan Document Preview</title>
+<style>
+  @page { size: Letter; margin: 0.399in 0.378in 0.47in 0.473in; }
+
+  html, body { margin:0; padding:0; }
+  body { padding-top:0.071in; }   /* page 1 only: banner sits lower than page-2 content */
+  body {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11pt;
+    line-height: 1.5;
+    color:#000;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* ---------- brand banner ---------- */
+  .banner { background:#BAEA02; height:1.247in; position:relative; }
+  .banner img { position:absolute; left:0.845in; top:0.505in; width:1.435in; height:auto; }
+
+  /* ---------- top reference strip ---------- */
+  .ref-strip { text-align:right; font-size:11px; line-height:1.15; color:#767676;
+               padding-right:11px; margin-top:13px; }
+
+  /* ---------- salutation ---------- */
+  .salutation { margin-left:0.100in; margin-top:38px; }
+  .ref-line   { margin-left:0.100in; margin-top:15px; }
+
+  /* ---------- statement block (indented column) ---------- */
+  .statement { margin-left:0.796in; margin-right:0.790in; }
+
+  h1.soa-title { font-size:13.75pt; font-weight:bold; line-height:1.15;
+                 margin:33px 0 0 0; }
+
+  table.meta { width:100%; border-collapse:collapse; margin-top:20px; }
+  table.meta td { padding:0 0 0 4px; vertical-align:top; width:50%; }
+
+  /* ---------- account summary box ---------- */
+  table.summary { width:100%; border-collapse:collapse; margin-top:20px;
+                  border:1px solid #ccc; }
+  table.summary td { border:1px solid #ccc; padding:9px 9px; width:50%; }
+  table.summary td.who { vertical-align:middle; }
+  table.summary td.acct { vertical-align:top; }
+
+  /* ---------- legend ---------- */
+  .legend { font-weight:bold; margin-top:17px; }
+
+  /* ---------- transactions ---------- */
+  table.txn { width:100%; border-collapse:collapse; margin-top:19px;
+              font-size:11px; line-height:1.15; }
+  table.txn td { border:1px solid #000; padding:10.185px 6px; vertical-align:middle; }
+  table.txn tr.head td { font-weight:bold; }
+  table.txn td.c-date { width:15%; }
+  table.txn td.c-type { width:35%; }
+  table.txn td.c-deb  { width:15%; }
+  table.txn td.c-cred { width:15%; }
+  table.txn td.c-bal  { width:20%; }
+  table.txn td.flag   { color:#FF0000; }
+
+  /* ---------- closing page ---------- */
+  .closing { page-break-before: always; }
+  .totals { margin-left:0.302in; margin-top:17px; line-height:0.25in; }
+  .signoff { margin-left:0.119in; margin-top:64px; }
+  .signoff .cheers { margin-top:20px; }
+  .signoff .team { font-weight:bold; }
+  .phone { color:#ADCB07; font-weight:bold; }
+  .contact { text-align:center; font-size:6.9pt; line-height:0.1535in;
+             color:#3f3f3f; margin-top:43px; }
+  .contact .lbl { font-weight:bold; color:#000; }
+</style>
+</head>
+<body>
+
+<div class="banner"><img src="moneyme-wordmark.png" alt="MONEYME"></div>
+
+<div class="ref-strip">Reference number &lt;REF&gt;</div>
+
+<div class="salutation">Hi &lt;FirstName&gt;,</div>
+<div class="ref-line">Reference number &lt;REF&gt;</div>
+
+<div class="statement">
+  <h1 class="soa-title">YOUR ACCOUNT STATEMENT</h1>
+
+  <table class="meta"><tr>
+    <td>Reference number: &lt;REF&gt;</td>
+    <td>&lt;D Month YYYY&gt;</td>
+  </tr></table>
+
+  <table class="summary"><tr>
+    <td class="who">&lt;First Last&gt;<br>&nbsp;&lt;Street address&gt;<br>&lt;Suburb State Postcode&gt;</td>
+    <td class="acct">
+      <b>Account Summary</b><br>
+      <b>Opening Balance:</b> $0.00<br>
+      <b>Closing Balance:</b> $0.00<br>
+      <b>Statement Period:</b> dd/mm/yyyy - dd/mm/yyyy<br>
+      <b>Contract Type:</b> &lt;CCC / PL / ...&gt;
+    </td>
+  </tr></table>
+
+  <div class="legend">X=Failed transaction<br>P=Pending transaction</div>
+
+  <table class="txn">
+    <tr class="head"><td class="c-date">Date</td><td class="c-type">Trans Type</td><td class="c-deb">Debit</td><td class="c-cred">Credit</td><td class="c-bal">Balance</td></tr>
+    <tr><td class="c-date">01/01/2026</td><td class="c-type">Funding</td><td class="c-deb">100.00</td><td class="c-cred">0.00</td><td class="c-bal">100.00</td></tr>
+    <tr><td class="c-date">01/01/2026</td><td class="c-type">Admin Fee</td><td class="c-deb">1.50</td><td class="c-cred">0.00</td><td class="c-bal">101.50</td></tr>
+    <tr><td class="c-date">02/01/2026</td><td class="c-type">Daily Interest</td><td class="c-deb">0.10</td><td class="c-cred">0.00</td><td class="c-bal">101.60</td></tr>
+    <tr><td class="c-date">15/01/2026</td><td class="c-type">Split Sched</td><td class="c-deb">0.00</td><td class="c-cred flag">X 20.00</td><td class="c-bal">101.60</td></tr>
+    <tr><td class="c-date">16/01/2026</td><td class="c-type">Split Sched</td><td class="c-deb">0.00</td><td class="c-cred">20.00</td><td class="c-bal">81.60</td></tr>
+  </table>
+</div>
+
+<div class="closing">
+  <div class="totals">
+    <b>Total interest for this period:</b> $0.00<br>
+    <b>Outstanding charges:</b> $0.00<br>
+    <b>Current arrears:</b> $0.00
+  </div>
+  <div class="signoff">
+    If you&rsquo;ve got any further queries, give us a buzz on
+    <span class="phone">1300&nbsp;669&nbsp;059</span>.
+    <div class="cheers">Cheers,<br><span class="team">Team MONEYME</span></div>
+  </div>
+  <div class="contact">
+    <span class="lbl">T</span> 1300 669 059 | <span class="lbl">E</span> hello@moneyme.com.au<br>
+    Level 3, 131 Macquarie Street, Sydney NSW 2000<br>
+    MoneyMe Financial Group Pty Ltd | ABN 40 163 691 236 | Australian Credit Licence Number 442218
+  </div>
+</div>
+</body>
+</html>

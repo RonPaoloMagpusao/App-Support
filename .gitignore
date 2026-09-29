@@ -1,0 +1,21 @@
+# Never commit customer material or local working files
+*.pdf
+*.xlsx
+*.xls
+*.csv
+*.docx
+*.png
+*.jpg
+*.jpeg
+!docs/**/diagrams/*.png
+
+# Local scratch
+.DS_Store
+Thumbs.db
+*.tmp
+*.log
+.vscode/
+.idea/
+__pycache__/
+.env
+.env.*
