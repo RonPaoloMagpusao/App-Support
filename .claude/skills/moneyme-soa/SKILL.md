@@ -1,6 +1,6 @@
 ---
 name: moneyme-soa
-description: Reformat a Horizon Statement of Account into MoneyMe's correct branded layout. Use whenever Ron supplies a Horizon SOA (HTML or PDF) plus a Customer Details PDF and wants it rebuilt, reformatted, fixed, or cleaned up: including when the SOA shows [Application].[EmailHeader] / [EmailSignature] / [EmailFooter] merge tokens or a masked xxxx customer name.
+description: 'Reformat a Horizon Statement of Account into MoneyMe''s correct branded layout. Use whenever Ron supplies a Horizon SOA (HTML or PDF) plus a Customer Details PDF and wants it rebuilt, reformatted, fixed, or cleaned up, including when the SOA shows [Application].[EmailHeader] / [EmailSignature] / [EmailFooter] merge tokens or a masked xxxx customer name.'
 ---
 
 # MoneyMe SOA reformatter

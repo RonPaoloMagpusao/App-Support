@@ -2,7 +2,7 @@
 
 How the MoneyMe App Support team actually works: intake, triage, datafixes, funding, refunds, unblocks, Sentry, Jira and releases.
 
-Last reviewed: 23 September 2026
+Last reviewed: 6 October 2026
 
 Sources: `harvest/slack-procedures.md` sections 1 to 10; `harvest/jira-raw-notes.md`; `harvest/confluence-systems-reference.md` sections 10 to 13; `harvest/confluence-content.md` (Cover Runbook 3131015188, Ticket Handling Manual 454590514, Daily Alerts 899317845, New Release Process 2036138487, Reoccurring DataFix process 2524381287); `harvest/slack-tribal-knowledge.md` section 6.
 
@@ -20,6 +20,32 @@ Sources: `harvest/slack-procedures.md` sections 1 to 10; `harvest/jira-raw-notes
 | [`jira-monitor-ticket-closure.md`](jira-monitor-ticket-closure.md) | SOP for closing MHD tickets: update the reporter, Completed then Closed, plus bulk-closing monitor up/down tickets |
 | [`monthly-sfd-reminder-email.md`](monthly-sfd-reminder-email.md) | SOP for the monthly Selected for Development reminder email |
 | [`release-and-uat.md`](release-and-uat.md) | Release types, MHD change request fields, post-deployment testing, house test result format |
+
+## Skills and agents for each procedure
+
+Each procedure has a Claude Code skill or subagent in `.claude/` that works from these docs. The docs stay the source of truth: change a procedure here first, then the skill or agent that follows it.
+
+| Procedure | Built as | Name |
+| --- | --- | --- |
+| Datafix request | Skill | [`mhd-datafix-request`](../../.claude/skills/mhd-datafix-request/SKILL.md) |
+| MHD ticket closure | Skill | [`mhd-ticket-closure`](../../.claude/skills/mhd-ticket-closure/SKILL.md) |
+| Monitor up/down bulk close | Subagent | [`monitor-ticket-closer`](../../.claude/agents/monitor-ticket-closer.md) |
+| Funding checks | Subagent, read-only | [`funding-checks-triage`](../../.claude/agents/funding-checks-triage.md) |
+| Refund support | Subagent, read-only | [`refund-support-triage`](../../.claude/agents/refund-support-triage.md) |
+| Sentry and error triage | Subagent, read-only | [`sentry-triage`](../../.claude/agents/sentry-triage.md) |
+| Issue intake and triage | Skill | [`mhd-issue-intake`](../../.claude/skills/mhd-issue-intake/SKILL.md) |
+| Account unblock and reset | Skill | [`account-unblock`](../../.claude/skills/account-unblock/SKILL.md) |
+| Monthly SfD reminder email | Skill | [`mhd-sfd-reminder`](../../.claude/skills/mhd-sfd-reminder/SKILL.md) |
+| Release and UAT | Skill | [`release-uat-result`](../../.claude/skills/release-uat-result/SKILL.md) |
+| SOA rebuild (runbook, not a procedure) | Skill | [`moneyme-soa`](../../.claude/skills/moneyme-soa/SKILL.md) |
+| Jira conventions | Reference only | Read by all of the above |
+
+Ground rules:
+
+- **Subagents report, they do not act.** The read-only agents never post to Slack, comment on Jira or claim SQL ran. `monitor-ticket-closer` transitions only a list of keys Ron has approved.
+- **Outward actions happen in the main conversation**, after Ron has seen the draft: Slack posts, Jira comments and transitions, anything for `#datascript-requests`. Closing tickets Ron names is the go-ahead for `mhd-ticket-closure`.
+- **No database access.** Skills and agents write SQL; the SQL devs run it.
+- Subagents work only in sessions on this repository. Skills also work elsewhere once uploaded at claude.ai, Settings, Skills.
 
 Related folders: [`../02-runbooks/`](../02-runbooks/) for symptom-driven fixes, [`../04-sql/`](../04-sql/) for scripts and stored procedures, [`../05-knowledge/`](../05-knowledge/) for tribal knowledge and system behaviour.
 
