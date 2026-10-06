@@ -25,6 +25,8 @@ SECRETS = [
     re.compile(r"[A-Za-z0-9+/]{24,}={1,2}"),                             # base64 blob (encrypted value)
     re.compile(r"(?i)(?<!~)\b[0-9a-f]{32,}\b"),                           # hex hash (not a ~space key)
 ]
+# Known binary payloads stored as text (not credentials)
+SKIP_FILES = {".claude/skills/moneyme-soa/scripts/logo_b64.txt"}  # MONEYME wordmark PNG
 LINK = re.compile(r"\[[^\]]*\]\(([^)\s]+)\)")
 
 def files():
@@ -37,6 +39,8 @@ def files():
 problems = []
 for path in files():
     rel = os.path.relpath(path, ROOT)
+    if rel.replace(os.sep, "/") in SKIP_FILES:
+        continue
     text = open(path, encoding="utf-8").read()
     for i, line in enumerate(text.split("\n"), 1):
         if "—" in line:
