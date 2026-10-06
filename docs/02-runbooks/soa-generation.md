@@ -64,7 +64,7 @@ Sources: MHD issue catalogue theme 1, team procedures (Slack) section 8, tribal 
 
 | Root cause | Action |
 | --- | --- |
-| Transaction volume, generation hangs | **No fix, workaround.** App Support generates the SOA manually with a script outside Horizon and attaches it to the Jira ticket or the Horizon Files tab. Performed dozens of times a month. Typical turnaround under two hours: MHD-35789 raised 10:01, delivered 11:51; MHD-35850 raised 09:15, delivered 09:41 |
+| Transaction volume, generation hangs | **No fix, workaround.** App Support generates the SOA manually with a script outside Horizon and attaches it to the Jira ticket or the Horizon Files tab. Performed dozens of times a month. Tooling: the `moneyme-soa` Claude Code skill ([../../.claude/skills/moneyme-soa/SKILL.md](../../.claude/skills/moneyme-soa/SKILL.md)) rebuilds a broken Horizon SOA HTML into the branded PDF without changing any figure. Typical turnaround under two hours: MHD-35789 raised 10:01, delivered 11:51; MHD-35850 raised 09:15, delivered 09:41 |
 | File too large to upload | **No action** if under 30 MB, it now uploads. Over 30 MB, **escalate** to the Horizon team |
 | Wrong recipient | **Datafix** to the contact record under the monthly umbrella ticket (MHD-35314, closed same day) |
 | Negative outstanding charges | **Escalate** to Rusty (Josh Allen). Individual accounts are being fixed manually. Lary Rosario, 2026-09-18: *"yung account na yan inayos na ni Rusty kahapon"* |
