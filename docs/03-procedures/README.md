@@ -17,7 +17,7 @@ Sources: `harvest/slack-procedures.md` sections 1 to 10; `harvest/jira-raw-notes
 | [`refund-support.md`](refund-support.md) | `#refund-supports`, the CRD standing instruction, refund failure modes |
 | [`sentry-and-error-triage.md`](sentry-and-error-triage.md) | `#app-support-sentry-error-logs`, project routing, Sentry to Uptrace |
 | [`jira-conventions.md`](jira-conventions.md) | MHD issue types, statuses, resolutions, labels, comment visibility, linking, JQL library |
-| [`jira-monitor-ticket-closure.md`](jira-monitor-ticket-closure.md) | SOP for closing MHD monitor up/down tickets via the Jira MCP connector |
+| [`jira-monitor-ticket-closure.md`](jira-monitor-ticket-closure.md) | SOP for closing MHD tickets: update the reporter, Completed then Closed, plus bulk-closing monitor up/down tickets |
 | [`monthly-sfd-reminder-email.md`](monthly-sfd-reminder-email.md) | SOP for the monthly Selected for Development reminder email |
 | [`release-and-uat.md`](release-and-uat.md) | Release types, MHD change request fields, post-deployment testing, house test result format |
 

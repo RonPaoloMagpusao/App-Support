@@ -1,10 +1,10 @@
-# Closing MHD monitor up/down tickets
+# Closing MHD tickets
 
-SOP for bulk-closing the UptimeRobot "Monitor is UP / DOWN" tickets that land in MHD, via the Jira MCP connector.
+SOP for closing MHD tickets via the Jira MCP connector: the rule for every ticket (update the reporter, Completed, then Closed), and bulk-closing the UptimeRobot "Monitor is UP / DOWN" tickets.
 
-Last reviewed: 23 September 2026
+Last reviewed: 6 October 2026
 
-Sources: App Support SOP, owner Ron Magpusao (project doc `claude/jira-monitor-ticket-closure-sop.md`), reproduced verbatim with light editing for repo fit; batch history from the 11 and 22 September 2026 runs.
+Sources: App Support SOP, owner Ron Magpusao (project doc `claude/jira-monitor-ticket-closure-sop.md`), reproduced verbatim with light editing for repo fit; batch history from the 11 and 22 September 2026 runs. Closing rule for all tickets: Ron, 29 September 2026, applied on MHD-37037 and MHD-37031.
 
 Applies to the MHD project ("MME Help Desk" service desk) via the Jira MCP connector.
 
@@ -26,6 +26,23 @@ Applies to the MHD project ("MME Help Desk" service desk) via the Jira MCP conne
 | Status: Closed | `6` |
 
 Repo note: the connector accepts the site hostname as the Cloud ID. The underlying site cloudId is `d9911a71-58c8-4d3c-a772-0f89702b5921` (`harvest/jira-raw-notes.md`), should a tool insist on the GUID.
+
+## Closing rule for every MHD ticket
+
+Applies to every MHD ticket being closed: Problems, datafix requests, SOA requests and monitor tickets alike.
+
+1. **Read the reporter** (`fields: ["reporter", "status", "comment"]`).
+2. **Post an update before closing.**
+   - Reporter is not Ron: a public comment that @mentions the reporter and says what was done, specifically (the fix, the figures or details changed, the account or application ID). Use ADF with a `mention` node so the reporter is notified. `addCommentToJiraIssue` with no `commentVisibility` posts it public (`jsdPublic: true`).
+   - Reporter is Ron: a short closing note on the outcome is enough.
+   - Monitor tickets: the standard comment below is the update.
+3. **Move to Completed.** Look the transition up with `getTransitionsForJiraIssue`, never hardcode it. On MHD Problems sitting in Scheduled it has been `191` (Scheduled to Completed); on monitor tickets it is `41`.
+4. **Then move to Closed** (`71`) as a separate call. Completed is not the end state: never stop there.
+5. **Verify** by re-reading the status.
+
+Worked example, 29 September 2026: MHD-37037 (reporter ishmaiah, arrears reset to $0.00) and MHD-37031 (reporter Christian De Villa, asset details updated). Each got a public @mention update, then `191` to Completed, then `71` to Closed.
+
+Unverified: whether `191` to Completed also sets `resolution`. The two tickets above were completed without the transition screen fields; if a report needs `resolution = Done`, pass `fields.resolution.id "10000"` as for monitor tickets, and see [`jira-conventions.md`](jira-conventions.md) on filtering by `statusCategory = Done` instead.
 
 ## Standard monitor tickets
 
