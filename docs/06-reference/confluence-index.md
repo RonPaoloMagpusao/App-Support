@@ -86,7 +86,7 @@ These are the pages read in full during this harvest. Extracted content is in
 | 1 | AS | App Support Cover Runbook, Ron's Top Recurring Issues | 3131015188 | 2026-08-26 | The eleven recurring issue types that make up two thirds of ticket volume, with symptom, cause, exact fix and escalation for each | **mirror, the single most valuable page in the tree** |
 | 2 | AS | Datafix catalogue, symptom routing reference | 3117842457 | 2026-08-21 | Routes a ticket symptom to the right fix source; Pass A lookup queries; landmines in the raw scripts; reference IDs | **mirror** |
 | 3 | AS | Store Procedures for App Support - Common datafixes | 2485059655 | 2026-09-15 | The 16 parameterised `dbo.AppSupport_*` procedures with EXEC samples and full CREATE bodies | **mirror** |
-| 4 | AS | SQL Data Fix scripts | 519602304 | 2026-08-07 | The ~100 item master catalogue of raw fixes keyed to historical MHD tickets | **mirror, with redaction**, contains plaintext passwords and hashes |
+| 4 | AS | SQL Data Fix scripts | 519602304 | 2026-09-28 | The ~100 item master catalogue of raw fixes keyed to historical MHD tickets | **mirror, with redaction**, contains plaintext passwords and hashes |
 | 5 | AS | Pending Funding and Refund support | 2385150262 | 2026-08-26 | Sweep and drill-down queries for stuck funding and refunds, plus the fix for each cause | **mirror** |
 | 6 | AS | Common Login SQL Data Fix Scripts | 1398210569 | 2025-03-13 | Eight login fixes plus the single most useful diagnostic query in the tree | **mirror, with redaction**, contains a password hash |
 | 7 | AS | App Support Daily Alerts | 899317845 | 2026-01-22 | What each `[AP]` alert in `#app-support-daily-alerts` means and what to run | **mirror** |
@@ -151,7 +151,7 @@ These are the pages read in full during this harvest. Extracted content is in
 | AS | MHD Ticket Investigator, AI agent runbook (App Support cover) | 3116564495 | 2026-08-20 | mirror |
 | AS | Investigation output format, what a completed MHD investigation looks like | 3117154358 | 2026-08-20 | reference only |
 | AS | August Progress Tracker 2026 | 3068297553 | 2026-08-19 | summarise |
-| AS | SQL Data Fix scripts | 519602304 | 2026-08-07 | mirror |
+| AS | SQL Data Fix scripts | 519602304 | 2026-09-28 | mirror |
 | AS | July Progress Tracker 2026 | 2982773887 | 2026-07-22 | summarise |
 | AS | Split Sched / CRD Payment Processing Failures (9-15 July 2026) | 3022159961 | 2026-07-16 | mirror |
 | AS | July Ticket Triage | 3022389323 | 2026-07-16 | mirror |
