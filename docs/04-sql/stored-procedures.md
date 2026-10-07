@@ -2,8 +2,8 @@
 
 The sixteen `dbo.AppSupport_*` stored procedures on Horizon2: execute samples, full bodies and warnings.
 
-Last reviewed: 23 September 2026
-Sources: Confluence AS page 2485059655, mirrored 23 September 2026. Edits here do not flow back to Confluence.
+Last reviewed: 7 October 2026
+Sources: Confluence AS page 2485059655, mirrored 23 September 2026, re-checked against the live page 7 October 2026 (no content changes since 15 Sep 2026). Edits here do not flow back to Confluence.
 
 - Space: AS · Page id: 2485059655 · Last updated: 15 Sep 2026 · Author: Ron Paolo Miguel Magpusao
 - URL: https://moneyme1.atlassian.net/wiki/spaces/AS/pages/2485059655/Store+Procedures+for+App+Support+-+Common+datafixes
@@ -687,6 +687,12 @@ END;
 GO
 ```
 
+**Trap: `@CloseTask = 1` without `@MHDTicket` wipes the task notes.** With `@CreateBackup = 0` the
+ticket guard does not run, so `@MHDTicket` can be NULL. `'...(' + NULL + ')'` is NULL, which sets
+`Task.Note` to NULL on every matching task instead of prepending to it. Always pass `@MHDTicket`
+when `@CloseTask = 1`. The body is also `CREATE PROCEDURE`, not `CREATE OR ALTER`, so re-running
+it fails once the procedure exists.
+
 ## 16 and 17. Insert BrandId = 5 customer contact and email
 
 Triggered by the task "Review Funding Follow up: Please check customer contact details!"
@@ -705,6 +711,10 @@ EXEC dbo.AppSupport_InsertApyContactNEmail
 SELECT * FROM CustomerEmail     WHERE CustomerId = 000000;
 SELECT * FROM CustomerContactNo WHERE CustomerId = 000000;
 ```
+
+**Trap: quote `@Number`.** The item 16 sample on the source page passes `@Number = 0400000000`
+unquoted. SQL Server reads that as an integer and the `VARCHAR(50)` parameter receives
+`400000000`, dropping the leading zero. The sample above is quoted; keep it that way.
 
 ```sql
 USE Horizon2
