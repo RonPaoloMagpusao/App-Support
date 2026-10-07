@@ -334,6 +334,10 @@ re comment it before handing it over.
 - **Item 95** mutates a second database (`Payment.dbo.SplitAccount`).
 - **Item 85** is explicitly interim, "while dev fix is not yet released". Check whether the
   release has landed.
+- **Second sequence item 72, Transaction Reversal (MHD-36922)** hardcodes the ApplicationId in
+  its `IF NOT EXISTS` guard instead of using `@AppId`, so on any other application the guard can
+  pass and a duplicate reversal is inserted, outside a transaction. Its `ELSE` `SELECT` is also
+  missing a comma after `BrokerFee`.
 - **Vehicles page item 3** compares an unquoted numeric literal to the varchar `VIN` column.
   Quote it.
 

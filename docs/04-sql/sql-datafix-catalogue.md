@@ -2,10 +2,10 @@
 
 The master catalogue of roughly 100 raw SQL datafix scripts. Archive material: read the warnings in datafix-routing.md before using any item.
 
-Last reviewed: 23 September 2026
-Sources: Confluence AS page 519602304, mirrored 23 September 2026. Edits here do not flow back to Confluence.
+Last reviewed: 7 October 2026
+Sources: Confluence AS page 519602304, mirrored 23 September 2026; items 72 and 73 of the second sequence added 7 October 2026 from the 28 Sep 2026 version. Edits here do not flow back to Confluence.
 
-- Space: AS · Page id: 519602304 · Last updated: 7 Aug 2026 · Author: Michael Dela Torre
+- Space: AS · Page id: 519602304 · Last updated: 28 Sep 2026 · Author: Michael Dela Torre
 - URL: https://moneyme1.atlassian.net/wiki/spaces/AS/pages/519602304/SQL+Data+Fix+scripts
 
 The maintained union set of App Support raw data fixes, roughly 100 numbered items keyed to
@@ -13,7 +13,7 @@ historical MHD tickets. Reproduced below in full, with credentials, customer ema
 phone numbers and customer addresses redacted.
 
 Caveat on numbering: the source page renders as two numbered sequences (1 to 28, then a second
-sequence restarting at 1 and running to 71). The Datafix catalogue page refers to item numbers
+sequence restarting at 1 and running to 73). The Datafix catalogue page refers to item numbers
 above 72, so item numbers quoted elsewhere do not map cleanly onto the numbering shown here.
 Confirm by symptom text, not by number.
 
@@ -1890,7 +1890,91 @@ delete from [ApplicationBank] where ApplicationBankId = 882049 and CustomerId = 
 --Testing
 select * From [ApplicationBank] where CustomerId = 868894
 ```
-72.   
+72. Transaction Reversal (edit appid, transactionid, and MHD#)
+
+```sql
+Use Horizon2
+GO
+
+DECLARE @AppId BIGINT = 10002053866
+DECLARE @FOR_REVERSAL_TranId BIGINT = 110353178
+DECLARE @DATAFIXNOTES VARCHAR(500) = 'Reverse Payment TranId: ' + CAST(@FOR_REVERSAL_TranId AS VARCHAR) + ' | MHD-36922'
+
+IF(NOT EXISTS(SELECT ApplicationId,TransactionId
+				FROM [Transaction]
+				WHERE ApplicationId = 10002053866 AND Notes like '%MHD-36922%'))
+BEGIN
+	SELECT 'Not Exists' AS [CHECK]
+
+	INSERT INTO [Transaction](ApplicationId, TranAmount, TranDate, Principal, EFee, Interest, Charge, DateSubmitted, DateProcessed, TransactionStatusId, TransactionTypeId, Notes, DateCreated, CreatedByUserId, ExtraFunds, Excess, Recoveries, AccountKeepingFee, AnnualFee, VirtualPrincipal, GstFee, MerchantFeeAmount, AdminFee, BrokerFee)
+	SELECT ApplicationId,
+			TranAmount * -1,
+			CAST(GETDATE() AS DATE),
+			Principal * -1,
+			EFee * -1,
+			Interest * -1,
+			Charge * -1,
+			GETDATE(),
+			GETDATE(),
+			1003,
+			36,
+			@DATAFIXNOTES,
+			GETDATE(),
+			10,
+			ExtraFunds * -1,
+			Excess * -1,
+			Recoveries * -1,
+			AccountKeepingFee * -1,
+			AnnualFee * -1,
+			VirtualPrincipal * -1,
+			GstFee * -1,
+			MerchantFeeAmount * -1,
+			AdminFee * -1,
+			BrokerFee * -1
+	FROM [Transaction]
+	WHERE ApplicationId = @AppId AND TransactionId = @FOR_REVERSAL_TranId
+
+	EXEC UpdateAmounts @AppId
+
+END
+ELSE
+BEGIN
+	SELECT 'Already Exists' AS [CHECK]
+
+	SELECT ApplicationId, 
+	TranAmount, 
+	TranDate, 
+	Principal, EFee, Interest, Charge, ExtraFunds, Excess, Recoveries, AccountKeepingFee, AnnualFee, VirtualPrincipal, GstFee, MerchantFeeAmount, AdminFee, BrokerFee
+	DateSubmitted, DateProcessed, TransactionStatusId, TransactionTypeId, Notes, DateCreated, CreatedByUserId
+	FROM [Transaction]
+	WHERE ApplicationId = @AppId AND Notes like '%MHD-36922%'
+END
+```
+
+> **Mirror note, not on the source page.** Two defects as published: the `IF NOT EXISTS` check
+> hardcodes `ApplicationId = 10002053866` instead of `@AppId`, so on any other application it
+> tests the wrong app and can insert a second reversal; and the `ELSE` `SELECT` is missing a comma
+> after `BrokerFee`, so `DateSubmitted` becomes a column alias. The `INSERT` also runs outside a
+> transaction. Replace the hardcoded id with `@AppId` and wrap in `BEGIN TRAN` before use.
+
+73. Move CLI request to Underwriting (StatusRequestId 51012); Update CreditLimitRequestInfo
+
+```sql
+USE Horizon2
+--MHD-37036 Move CLI request to UW; App 10002930839, CreditLimitRequestInfoId 198087; StatusRequestId 51012 = UW
+--Find
+SELECT StatusRequestId, * FROM CreditLimitRequestInfo WHERE ApplicationId = 10002930839
+--Backup
+SELECT * INTO CreditLimitRequestInfo_MHD37036 FROM CreditLimitRequestInfo WHERE CreditLimitRequestInfoId = 198087
+--Update
+BEGIN TRAN
+UPDATE CreditLimitRequestInfo SET StatusRequestId = 51012 WHERE CreditLimitRequestInfoId = 198087
+--Check (1 row, StatusRequestId = 51012), then COMMIT; anything else ROLLBACK
+SELECT StatusRequestId, * FROM CreditLimitRequestInfo WHERE CreditLimitRequestInfoId = 198087
+--COMMIT TRAN
+--ROLLBACK TRAN
+```
+74.
 
 ###  **Team**
 
