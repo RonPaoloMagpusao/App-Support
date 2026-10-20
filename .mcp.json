@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "sqlmi": {
+      "type": "http",
+      "url": "https://ca-prod-ae-svc-sqlmimcp-00.delightfulgrass-a54bf6f5.australiaeast.azurecontainerapps.io/mcp"
+    }
+  }
+}
